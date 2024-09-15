@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mode.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moassi <moassi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hkanaan <hkanaan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 12:58:36 by moassi            #+#    #+#             */
-/*   Updated: 2024/08/12 09:43:29 by moassi           ###   ########.fr       */
+/*   Updated: 2024/09/15 18:24:37 by hkanaan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,26 +55,26 @@ void    Server::mode(std::string command, int fd)
         
     std::string mode = args[2];
     std::stringstream res;
-    res << ":42-IRC " << client->getNickname() << "!" << client->getUsername() << "@" << client->getIpadd() << " MODE " << channel->getName() << " ";
     if (mode == "+i")
     {
         channel->setInviteOnly(true);
-        res << mode;
+        res << channel->getName() << " " << mode << " " << client->getUsername() << "\r\n";
     }
     else if (mode == "-i")
     {
         channel->setInviteOnly(false);
         res << mode;
+        res << channel->getName() << " " << mode << " " << client->getUsername() << "\r\n";
     }
     else if (mode == "+t")
     {
         channel->setTopicRestriction(true);
-        res << mode;
+        res << channel->getName() << " " << mode << " " << client->getUsername() << "\r\n";
     } 
     else if (mode == "-t")
     {
         channel->setTopicRestriction(false);
-        res << mode;
+        res << channel->getName() << " " << mode << " " << client->getUsername() << "\r\n";
     }
     else if (mode == "+k")
     {
@@ -82,13 +82,13 @@ void    Server::mode(std::string command, int fd)
         if (args.size() < 4)
             { sendResponse(ERR_NOTENOUGHPARAM(std::string("MODE")), fd); return ; }
         channel->setPassword(args[3]);
-        res << mode;
+        res << channel->getName() << " " << mode << " " << client->getUsername() << "\r\n";
     }
     else if (mode == "-k")
     {
         channel->setKey(false);
         channel->setPassword("");
-        res << mode;
+        res << channel->getName() << " " << mode << " " << client->getUsername() << "\r\n";
     }
     else if (mode == "+o")
     {

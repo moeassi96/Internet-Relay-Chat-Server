@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: moassi <moassi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hkanaan <hkanaan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/10 16:15:54 by moassi            #+#    #+#             */
-/*   Updated: 2024/08/13 10:39:09 by moassi           ###   ########.fr       */
+/*   Updated: 2024/09/15 17:31:16 by hkanaan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ void    Server::msgChannel(std::string channelName, std::string msg, int fd)
     
     std::stringstream ss;
     // ss << ": " << client->getNickname() << " privmsg " << channelName;
-    ss << ":" << client->getNickname() << " :" << msg << "\r\n";
-    
+    ss << ":" << client->getNickname() << " PRIVMSG " << channelName << " :" << msg << "\r\n";
+    std::cout << ss.str() << std::endl;
     channel->sendResponseToallOthers(ss.str(), client->getFd());
 }
 
@@ -38,8 +38,7 @@ void    Server::msgClient(std::string targetName, std::string msg, int fd)
     if (!target)
         { sendResponse(ERR_NOSUCHNICK(client->getNickname(), targetName), fd); return ; }
     std::stringstream ss;
-    ss << ":42-IRC " << client->getNickname() << "!~" << client->getUsername() << "@" + client->getIpadd() + " PRIVMSG " << target->getNickname();
-    ss << " :" << msg << "\r\n";
+    ss << ":" << client->getNickname() << " PRIVMSG " << targetName << " :" << msg << "\r\n";
 
     sendResponse(ss.str(), target->getFd());
 }
